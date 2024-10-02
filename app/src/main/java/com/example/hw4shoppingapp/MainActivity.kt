@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -59,15 +59,12 @@ fun ShoppingApp() {
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     if (windowInfo.isWideScreen) {
-        // Two-pane layout for wide screens, one for the product list
-        // the other for the product details
         Row(modifier = Modifier.fillMaxSize()) {
             ProductList(products = products, onProductSelected = { selectedProduct = it }, selectedProduct = selectedProduct, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(16.dp))
             ProductDetailPane(product = selectedProduct, onGoBack = { selectedProduct = null }, isWideScreen = true, modifier = Modifier.weight(1f))
         }
     } else {
-        // Single-pane layout for narrow screens
         if (selectedProduct == null) {
             ProductList(products = products, onProductSelected = { selectedProduct = it }, selectedProduct = selectedProduct, modifier = Modifier.fillMaxSize())
         } else {
@@ -78,13 +75,12 @@ fun ShoppingApp() {
 
 @Composable
 fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, selectedProduct: Product?, modifier: Modifier = Modifier) {
-    // Products displayed in a lazy column in the product list pane
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 48.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        // List Title
+
         item {
             Text(
                 text = "Products",
@@ -93,12 +89,9 @@ fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, s
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-
-        // List Items
         items(products) { product ->
             val isSelected = selectedProduct == product
             val backgroundColor = if (isSelected) Color(0xffdef2d8) else Color.White
-
 
             Box(
                 modifier = Modifier
@@ -119,7 +112,6 @@ fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, s
 
 @Composable
 fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boolean, modifier: Modifier = Modifier) {
-    // Product details pane used when the user selects a particular product
     Box(
         modifier = modifier
             .padding(16.dp)
@@ -131,7 +123,6 @@ fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boo
             verticalArrangement = Arrangement.Center
         ) {
             if (product != null) {
-                // Product Detail
                 Text(
                     text = "Details for ${product.name}",
                     fontSize = 20.sp,
@@ -149,7 +140,6 @@ fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boo
                     fontSize = 16.sp
                 )
                 if (!isWideScreen) {
-                    // Go back button for portrait mode
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "< Go back",
@@ -162,7 +152,6 @@ fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boo
                     )
                 }
             } else {
-                // No product selected
                 Text(
                     text = "No product selected",
                     fontSize = 20.sp,
@@ -178,7 +167,6 @@ fun calculateCurrentWindowInfo(): WindowInfo {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
-    // Set a breakpoint for wide vs narrow screens (600dp is commonly used)
     val isWideScreen = screenWidth >= 600
 
     return WindowInfo(
