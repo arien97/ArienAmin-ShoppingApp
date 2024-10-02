@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.io.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-data class Product(val name: String, val price: String, val description: String)
+data class Product(val name: String, val price: String, val description: String) : Serializable
 
 val products = listOf(
     Product("Product A", "$100", "This is a great product A."),
@@ -56,7 +58,7 @@ val products = listOf(
 @Composable
 fun ShoppingApp() {
     val windowInfo = calculateCurrentWindowInfo()
-    var selectedProduct by remember { mutableStateOf<Product?>(null) }
+    var selectedProduct by rememberSaveable { mutableStateOf<Product?>(null) }
 
     if (windowInfo.isWideScreen) {
         Row(modifier = Modifier.fillMaxSize()) {
