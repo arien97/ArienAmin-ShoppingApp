@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,14 +62,14 @@ fun ShoppingApp() {
         // Two-pane layout for wide screens, one for the product list
         // the other for the product details
         Row(modifier = Modifier.fillMaxSize()) {
-            ProductList(products = products, onProductSelected = { selectedProduct = it }, modifier = Modifier.weight(1f))
+            ProductList(products = products, onProductSelected = { selectedProduct = it }, selectedProduct = selectedProduct, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(16.dp))
             ProductDetailPane(product = selectedProduct, onGoBack = { selectedProduct = null }, isWideScreen = true, modifier = Modifier.weight(1f))
         }
     } else {
         // Single-pane layout for narrow screens
         if (selectedProduct == null) {
-            ProductList(products = products, onProductSelected = { selectedProduct = it }, modifier = Modifier.fillMaxSize())
+            ProductList(products = products, onProductSelected = { selectedProduct = it }, selectedProduct = selectedProduct, modifier = Modifier.fillMaxSize())
         } else {
             ProductDetailPane(product = selectedProduct, onGoBack = { selectedProduct = null }, isWideScreen = false, modifier = Modifier.fillMaxSize())
         }
@@ -75,12 +77,12 @@ fun ShoppingApp() {
 }
 
 @Composable
-fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, modifier: Modifier = Modifier) {
+fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, selectedProduct: Product?, modifier: Modifier = Modifier) {
     // Products displayed in a lazy column in the product list pane
     LazyColumn(
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 48.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 48.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-
     ) {
         // List Title
         item {
@@ -94,19 +96,26 @@ fun ProductList(products: List<Product>, onProductSelected: (Product) -> Unit, m
 
         // List Items
         items(products) { product ->
-            Text(
-                text = product.name,
+            val isSelected = selectedProduct == product
+            val backgroundColor = if (isSelected) Color(0xffdef2d8) else Color.White
+
+
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(backgroundColor, RoundedCornerShape(8.dp))
                     .clickable { onProductSelected(product) }
-                    .padding(8.dp),
-                fontSize = 18.sp
-            )
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = product.name,
+                    fontSize = 18.sp
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
-
 
 @Composable
 fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boolean, modifier: Modifier = Modifier) {
@@ -163,7 +172,6 @@ fun ProductDetailPane(product: Product?, onGoBack: () -> Unit, isWideScreen: Boo
         }
     }
 }
-
 
 @Composable
 fun calculateCurrentWindowInfo(): WindowInfo {
