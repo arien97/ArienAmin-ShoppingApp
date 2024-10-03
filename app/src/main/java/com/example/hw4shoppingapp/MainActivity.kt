@@ -50,9 +50,9 @@ class MainActivity : ComponentActivity() {
 data class Product(val name: String, val price: String, val description: String) : Serializable
 
 val products = listOf(
-    Product("Product A", "$100", "This is a great product A."),
-    Product("Product B", "$150", "This is product B with more features."),
-    Product("Product C", "$200", "Premium product C.")
+    Product("Kayali | Vanilla", "$100", "This is a 1.7oz bottle of perfume. It has key notes of Vanilla Orchids, Tonka Absolute, and Amber Woods."),
+    Product("YSL | Black Opium", "$130", "This is a 1.6oz bottle of perfume. It has key notes of Black Coffee, White Flowers, and Vanilla."),
+    Product("Marc Jacobs | Daisy", "$186", "This is a 6.80z bottle of perfume. It has key notes of Strawberry, Violet Leaves, and Jasmine.")
 )
 
 @Composable
